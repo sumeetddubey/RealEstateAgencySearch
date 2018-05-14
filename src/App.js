@@ -8,25 +8,36 @@ class App extends Component {
         super(props);
         this.state = {
             addresses: []
-        }
+        };
+
+        this.onSearch = this.onSearch.bind(this);
 
     }
 
     onSearch(addresses){
-        console.log(addresses);
+        this.setState({addresses})
     }
 
     render() {
+        const searchWithoutMap = <div>
+            <Search
+                onSearch={this.onSearch}
+            />
+        </div>;
+
+        const searchWithMap = <div>
+            <Search
+                onSearch={this.onSearch}
+            />
+            <MapContainer
+                addresses={this.state.addresses}
+                google={window.google}
+            />
+        </div>;
+
+
         return (
-            <div>
-                <Search
-                    onSearch={this.onSearch}
-                />
-                <MapContainer
-                    addresses={this.state.addresses}
-                    google={window.google}
-                />
-            </div>
+            this.state.addresses.length === 0 ? searchWithoutMap : searchWithMap
         );
     }
 }
