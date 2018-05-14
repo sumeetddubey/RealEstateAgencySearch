@@ -2,7 +2,7 @@
  * Created by sumeetdubey on 5/14/18.
  */
 import React, { Component } from 'react';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import './search.css';
 
 class Search extends Component {
@@ -24,12 +24,12 @@ class Search extends Component {
         geocodeByAddress(this.state.address1)
             .then(results => {
                 addresses.push(results[0]);
-                this.props.onSearch(addresses);
-                //geocodeByAddress(this.state.address2)
-                //    .then(results => {
-                //        addresses.push(results[1]);
-                //    })
-                //    .catch(error => console.error('Error', error));
+                geocodeByAddress(this.state.address2)
+                    .then(results => {
+                        addresses.push(results[0]);
+                        this.props.onSearch(addresses);
+                    })
+                    .catch(error => console.error('Error', error));
             })
             .catch(error => console.error('Error', error));
 
@@ -40,16 +40,28 @@ class Search extends Component {
         this.setState({ address1: address })
     };
 
-    handleChangeAddress2(address){
-        this.setState({
-            address2: address.target.value
-        })
-    }
+    handleChangeAddress2 = (address) => {
+        this.setState({ address2: address })
+    };
 
     render() {
         const renderFunction = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
             <div className="form-group">
                 <label htmlFor="inputAddress1">Address 1</label>
+                <input className="form-control" {...getInputProps()} />
+                <div className="autocomplete-dropdown-container">
+                    {suggestions.map(suggestion => (
+                        <div {...getSuggestionItemProps(suggestion)}>
+                            <span className="autocomplete-dropdown-item">{suggestion.description}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const renderFunction2 = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
+            <div className="form-group">
+                <label htmlFor="inputAddress2">Address 2</label>
                 <input className="form-control" {...getInputProps()} />
                 <div className="autocomplete-dropdown-container">
                     {suggestions.map(suggestion => (
@@ -73,9 +85,13 @@ class Search extends Component {
                             {renderFunction}
                         </PlacesAutocomplete>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="inputAddress2">Address 2</label>
-                        <input type="text" className="form-control" id="inputAddress2" onChange={this.handleChangeAddress2}/>
+                    <div className="">
+                        <PlacesAutocomplete
+                            value={this.state.address2}
+                            onChange={this.handleChangeAddress2}
+                        >
+                            {renderFunction2}
+                        </PlacesAutocomplete>
                     </div>
 
                     <button type="submit" className="btn btn-primary">Submit</button>

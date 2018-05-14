@@ -2,7 +2,7 @@
  * Created by sumeetdubey on 5/14/18.
  */
 import React, { Component } from 'react';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import {Map, InfoWindow, Marker} from 'google-maps-react';
 import './map.css';
 
 class MapContainer extends Component {
@@ -19,23 +19,63 @@ class MapContainer extends Component {
     }
 
     fetchPlaces(mapProps, map) {
-        const location = this.props.addresses[0].geometry.location;
         const {google} = mapProps;
         const service = new google.maps.places.PlacesService(map);
-        const request = {
+
+        let location = this.props.addresses[0].geometry.location;
+        let request = {
             location: location,
             radius: 16093.4,
-            type: ['hotel']
+            type: ['real_estate_agency']
         };
+        let places=[];
         service.nearbySearch(request, (results, status) => {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                console.log(results);
-                this.setState({
-                    places: results
-                });
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                places=results;
+                location = this.props.addresses[1].geometry.location;
+                request['location'] = location;
+                service.nearbySearch(request, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        places = this.addWithoutDuplicates(places, results);
+                        this.computeDistances(google, places);
+                        places.sort(function(a, b){
+                            return a.distance - b.distance
+                        });
+                        this.setState({places});
+                        this.props.onGettingPlaces(places);
+                    }
+                })
             }
         })
     }
+
+    computeDistances(google, places){
+        for(var i in places){
+            places[i]['distance'] = google.maps.geometry.spherical.computeDistanceBetween(
+                    places[i].geometry.location, this.props.addresses[0].geometry.location
+                )
+            +
+                google.maps.geometry.spherical.computeDistanceBetween(
+                    places[i].geometry.location, this.props.addresses[0].geometry.location
+                )
+        }
+    }
+
+    addWithoutDuplicates(list, items){
+        for(let i in items){
+            let duplicate=false;
+            for(let j in list){
+                if(items[i]['id'] === list[j]['id']){
+                    duplicate = true;
+                    break;
+                }
+            }
+            if(!duplicate)
+                list.push(items[i]);
+        }
+        return list;
+    }
+
 
     onMarkerClick(props, marker, e){
         this.setState({
@@ -61,7 +101,8 @@ class MapContainer extends Component {
                     lng: -97.7430608
                 }}
                 zoom={12}
-                onReady={this.fetchPlaces}>
+                onReady={this.fetchPlaces}
+            >
 
                 {this.state.places && this.state.places.map((place, i) =>
                     <Marker

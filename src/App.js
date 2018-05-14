@@ -7,15 +7,21 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            addresses: []
+            addresses: [],
+            places: []
         };
 
         this.onSearch = this.onSearch.bind(this);
-
+        this.onGettingPlaces = this.onGettingPlaces.bind(this);
     }
 
     onSearch(addresses){
         this.setState({addresses})
+    }
+
+    onGettingPlaces(places){
+        console.log(places);
+        this.setState({places});
     }
 
     render() {
@@ -31,6 +37,7 @@ class App extends Component {
             />
             <MapContainer
                 addresses={this.state.addresses}
+                onGettingPlaces={this.onGettingPlaces}
                 google={window.google}
             />
         </div>;
