@@ -74,7 +74,7 @@ class Search extends Component {
         );
 
         return (
-            <div className="container mt-4">
+            <div className="mt-4">
                 <h4>Enter two addresses to find real estate agencies near them</h4>
                 <form onSubmit={this.handleSubmit}>
                     <div className="">

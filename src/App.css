@@ -1,0 +1,7 @@
+.places-container{
+    height: 500px;
+}
+
+.places-list-container{
+    display: flex
+}
