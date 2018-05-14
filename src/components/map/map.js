@@ -21,7 +21,10 @@ class MapContainer extends Component {
     }
 
     componentDidUpdate(){
-        this.fetchPlaces(this.state.mapProps, this.state.map);
+        // re-render only if there is a change in addresses
+        if(this.props.addresses !== this.state.addresses){
+            this.fetchPlaces(this.state.mapProps, this.state.map);
+        }
     }
 
     fetchPlaces(mapProps, map) {
@@ -51,7 +54,8 @@ class MapContainer extends Component {
                         this.setState({
                             map: map,
                             mapProps: mapProps,
-                            places: places
+                            places: places,
+                            addresses: this.props.addresses
                         });
                         this.props.onGettingPlaces(places);
                     }
@@ -124,16 +128,8 @@ class MapContainer extends Component {
                     </div>
                 </InfoWindow>
             </Map>
-
         );
     }
 }
 
 export default MapContainer;
-//const LoadingContainer = (props) => (
-//    <div className="map-container"></div>
-//);
-//
-//export default GoogleApiWrapper({
-//    LoadingContainer: LoadingContainer
-//})(MapContainer)

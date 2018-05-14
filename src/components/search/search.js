@@ -73,6 +73,16 @@ class Search extends Component {
             </div>
         );
 
+        let google=window.google;
+        let bounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng({lat: 30.098659, lng: -97.938383}),
+            new google.maps.LatLng({lat: 30.516863, lng: -97.568420})
+        );
+        const options={
+            bounds: bounds,
+            componentRestrictions: {country: 'us'}
+        };
+
         return (
             <div className="mt-4">
                 <h5>Enter two addresses to find real estate agencies near them!</h5>
@@ -81,6 +91,7 @@ class Search extends Component {
                         <PlacesAutocomplete
                             value={this.state.address1}
                             onChange={this.handleChangeAddress1}
+                            searchOptions={options}
                         >
                             {renderFunction}
                         </PlacesAutocomplete>
