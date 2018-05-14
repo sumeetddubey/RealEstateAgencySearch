@@ -12,13 +12,20 @@ class MapContainer extends Component {
             places:[],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedPlace: {}
+            selectedPlace: {},
+            mapProps: null,
+            map: null
         };
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
     }
 
+    componentDidUpdate(){
+        this.fetchPlaces(this.state.mapProps, this.state.map);
+    }
+
     fetchPlaces(mapProps, map) {
+        console.log('fetching places...');
         const {google} = mapProps;
         const service = new google.maps.places.PlacesService(map);
 
@@ -41,7 +48,11 @@ class MapContainer extends Component {
                         places.sort(function(a, b){
                             return a.distance - b.distance
                         });
-                        this.setState({places});
+                        this.setState({
+                            map: map,
+                            mapProps: mapProps,
+                            places: places
+                        });
                         this.props.onGettingPlaces(places);
                     }
                 })

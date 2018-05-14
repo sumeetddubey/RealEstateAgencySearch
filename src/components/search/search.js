@@ -75,9 +75,9 @@ class Search extends Component {
 
         return (
             <div className="mt-4">
-                <h4>Enter two addresses to find real estate agencies near them</h4>
+                <h5>Enter two addresses to find real estate agencies near them!</h5>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="">
+                    <div>
                         <PlacesAutocomplete
                             value={this.state.address1}
                             onChange={this.handleChangeAddress1}
@@ -85,7 +85,7 @@ class Search extends Component {
                             {renderFunction}
                         </PlacesAutocomplete>
                     </div>
-                    <div className="">
+                    <div>
                         <PlacesAutocomplete
                             value={this.state.address2}
                             onChange={this.handleChangeAddress2}

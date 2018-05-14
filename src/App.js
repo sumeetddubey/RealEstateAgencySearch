@@ -17,11 +17,10 @@ class App extends Component {
     }
 
     onSearch(addresses){
-        this.setState({addresses})
+        this.setState({addresses});
     }
 
     onGettingPlaces(places){
-        console.log(places);
         this.setState({places});
     }
 
