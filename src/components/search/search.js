@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import './search.css';
 
 class Search extends Component {
     constructor(props){
@@ -23,12 +24,6 @@ class Search extends Component {
         this.props.onSearch(addresses)
     }
 
-    //handleChangeAddress1(address){
-    //    this.setState({
-    //        address1: address.target.value
-    //    })
-    //}
-
     handleChangeAddress1 = (address) => {
         this.setState({ address1: address })
     };
@@ -46,7 +41,7 @@ class Search extends Component {
                 <div className="autocomplete-dropdown-container">
                     {suggestions.map(suggestion => (
                         <div {...getSuggestionItemProps(suggestion)}>
-                            <span>{suggestion.description}</span>
+                            <span className="autocomplete-dropdown-item">{suggestion.description}</span>
                         </div>
                     ))}
                 </div>
