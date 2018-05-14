@@ -20,8 +20,20 @@ class Search extends Component {
 
     handleSubmit(event){
         event.preventDefault();
-        let addresses = [this.state.address1, this.state.address2];
-        this.props.onSearch(addresses)
+        let addresses = [];
+        geocodeByAddress(this.state.address1)
+            .then(results => {
+                addresses.push(results[0]);
+                this.props.onSearch(addresses);
+                //geocodeByAddress(this.state.address2)
+                //    .then(results => {
+                //        addresses.push(results[1]);
+                //    })
+                //    .catch(error => console.error('Error', error));
+            })
+            .catch(error => console.error('Error', error));
+
+
     }
 
     handleChangeAddress1 = (address) => {
