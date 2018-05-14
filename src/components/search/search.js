@@ -36,7 +36,8 @@ class Search extends Component {
 
     render() {
         const renderFunction = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
-            <div className="autocomplete-root">
+            <div className="form-group">
+                <label htmlFor="inputAddress1">Address 1</label>
                 <input className="form-control" {...getInputProps()} />
                 <div className="autocomplete-dropdown-container">
                     {suggestions.map(suggestion => (
@@ -52,8 +53,7 @@ class Search extends Component {
             <div className="container mt-4">
                 <h4>Enter two addresses to find real estate agencies near them</h4>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="inputAddress1">Address 1</label>
+                    <div className="">
                         <PlacesAutocomplete
                             value={this.state.address1}
                             onChange={this.handleChangeAddress1}
