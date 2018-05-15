@@ -14,6 +14,7 @@ class App extends Component {
 
         this.onSearch = this.onSearch.bind(this);
         this.onGettingPlaces = this.onGettingPlaces.bind(this);
+        this.selectPlace = this.selectPlace.bind(this);
     }
 
     onSearch(addresses){
@@ -24,6 +25,12 @@ class App extends Component {
         this.setState({places});
     }
 
+    selectPlace(place){
+        this.setState({
+            selectedPlace: place
+        })
+    }
+
     render() {
         const searchWithoutMap = <div>
             <Search
@@ -31,24 +38,22 @@ class App extends Component {
             />
         </div>;
 
-        const searchWithMap = <div>
+        const searchWithMap = <div className="my-4">
             <Search
                 onSearch={this.onSearch}
             />
-            <div className="row places-container my-4">
-                <div className="col-4 places-list-container">
-                    <PlacesList
-                        places={this.state.places}
-                    />
-                </div>
-                <div className="col-8">
-                    <MapContainer
-                        addresses={this.state.addresses}
-                        onGettingPlaces={this.onGettingPlaces}
-                        google={window.google}
-                    />
-                </div>
+            <div className="map-container my-4">
+                <MapContainer
+                    addresses={this.state.addresses}
+                    onGettingPlaces={this.onGettingPlaces}
+                    google={window.google}
+                    selectedPlace={this.state.selectedPlace}
+                />
             </div>
+            <PlacesList
+                places={this.state.places}
+                selectPlace={this.selectPlace}
+            />
         </div>;
 
 

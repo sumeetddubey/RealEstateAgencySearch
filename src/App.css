@@ -1,7 +1,3 @@
-.places-container{
+.map-container{
     height: 500px;
-}
-
-.places-list-container{
-    display: flex
 }

@@ -20,6 +20,10 @@ class Search extends Component {
 
     handleSubmit(event){
         event.preventDefault();
+        if(!this.state.address1 || !this.state.address2){
+            alert('Please enter 2 addresses');
+            return;
+        }
         let addresses = [];
         geocodeByAddress(this.state.address1)
             .then(results => {
@@ -47,21 +51,6 @@ class Search extends Component {
     render() {
         const renderFunction = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
             <div className="form-group">
-                <label htmlFor="inputAddress1">Address 1</label>
-                <input className="form-control" {...getInputProps()} />
-                <div className="autocomplete-dropdown-container">
-                    {suggestions.map(suggestion => (
-                        <div {...getSuggestionItemProps(suggestion)}>
-                            <span className="autocomplete-dropdown-item">{suggestion.description}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
-
-        const renderFunction2 = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
-            <div className="form-group">
-                <label htmlFor="inputAddress2">Address 2</label>
                 <input className="form-control" {...getInputProps()} />
                 <div className="autocomplete-dropdown-container">
                     {suggestions.map(suggestion => (
@@ -88,6 +77,7 @@ class Search extends Component {
                 <h5>Enter two addresses to find real estate agencies near them!</h5>
                 <form onSubmit={this.handleSubmit}>
                     <div>
+                        <label htmlFor="inputAddress1">Address 1</label>
                         <PlacesAutocomplete
                             value={this.state.address1}
                             onChange={this.handleChangeAddress1}
@@ -97,11 +87,12 @@ class Search extends Component {
                         </PlacesAutocomplete>
                     </div>
                     <div>
+                        <label htmlFor="inputAddress2">Address 2</label>
                         <PlacesAutocomplete
                             value={this.state.address2}
                             onChange={this.handleChangeAddress2}
                         >
-                            {renderFunction2}
+                            {renderFunction}
                         </PlacesAutocomplete>
                     </div>
 

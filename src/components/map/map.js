@@ -12,9 +12,10 @@ class MapContainer extends Component {
             places:[],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedPlace: {},
+            activePlace: {},
             mapProps: null,
-            map: null
+            map: null,
+            mapCenter:{}
         };
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -25,6 +26,13 @@ class MapContainer extends Component {
         if(this.props.addresses !== this.state.addresses){
             this.fetchPlaces(this.state.mapProps, this.state.map);
         }
+        if(this.props.selectedPlace !== this.state.selectedPlace){
+            this.setState({
+                selectedPlace: this.props.selectedPlace,
+                mapCenter: this.props.selectedPlace.geometry.location
+            });
+        }
+        window.scrollTo(0, 0);
     }
 
     fetchPlaces(mapProps, map) {
@@ -46,7 +54,7 @@ class MapContainer extends Component {
                 request['location'] = location;
                 service.nearbySearch(request, (results, status) => {
                     if (status === google.maps.places.PlacesServiceStatus.OK) {
-                        places = this.addWithoutDuplicates(places, results);
+                        places = MapContainer.addWithoutDuplicates(places, results);
                         this.computeDistances(google, places);
                         places.sort(function(a, b){
                             return a.distance - b.distance
@@ -57,6 +65,7 @@ class MapContainer extends Component {
                             places: places,
                             addresses: this.props.addresses
                         });
+                        console.log(places);
                         this.props.onGettingPlaces(places);
                     }
                 })
@@ -76,7 +85,7 @@ class MapContainer extends Component {
         }
     }
 
-    addWithoutDuplicates(list, items){
+    static addWithoutDuplicates(list, items){
         for(let i in items){
             let duplicate=false;
             for(let j in list){
@@ -94,20 +103,37 @@ class MapContainer extends Component {
 
     onMarkerClick(props, marker, e){
         this.setState({
-            selectedPlace: props,
+            activePlace: props,
             activeMarker: marker,
             showingInfoWindow: true
         });
     }
 
+    isActive(placeId){
+        if(!this.state.selectedPlace)
+            return false;
+        return this.state.selectedPlace.id === placeId;
+    }
+
     render() {
+        const style={
+            height: 500 +'px',
+            width: 77 +'vw'
+        };
+
+        const activeIcon={
+            url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+        };
+
         return (
             <Map
                 google={this.props.google}
+                style={style}
                 initialCenter={{
                     lat: 30.267153,
                     lng: -97.7430608
                 }}
+                center={this.state.mapCenter}
                 zoom={12}
                 onReady={this.fetchPlaces}
             >
@@ -118,13 +144,14 @@ class MapContainer extends Component {
                         name={place.name}
                         position={place.geometry.location}
                         onClick={this.onMarkerClick}
+                        icon={this.isActive(place.id) ? activeIcon : undefined}
                     />
                 )}
                 <InfoWindow
                     marker={this.state.activeMarker}
                     visible={this.state.showingInfoWindow}>
                     <div>
-                        <p className="lead">{this.state.selectedPlace.name}</p>
+                        <p className="lead">{this.state.activePlace.name}</p>
                     </div>
                 </InfoWindow>
             </Map>
