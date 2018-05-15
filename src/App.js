@@ -32,13 +32,13 @@ class App extends Component {
     }
 
     render() {
-        const searchWithoutMap = <div>
+        const searchWithoutResults = <div>
             <Search
                 onSearch={this.onSearch}
             />
         </div>;
 
-        const searchWithMap = <div className="my-4">
+        const searchWithResults = <div className="my-4">
             <Search
                 onSearch={this.onSearch}
             />
@@ -59,7 +59,7 @@ class App extends Component {
 
         return (
             <div className="container">
-                {this.state.addresses.length === 0 ? searchWithoutMap : searchWithMap}
+                {this.state.addresses.length === 0 ? searchWithoutResults : searchWithResults}
             </div>
         );
     }

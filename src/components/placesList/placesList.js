@@ -36,4 +36,8 @@ PlacesList.propTypes={
     selectedPlace: PropTypes.object
 };
 
+PlaceItem.defaultProps = {
+    places: []
+};
+
 export default PlacesList;

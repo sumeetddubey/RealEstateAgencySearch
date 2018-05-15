@@ -23,10 +23,11 @@ class MapContainer extends Component {
     }
 
     componentDidUpdate(){
-        // re-render only if there is a change in addresses
+        // re-render if there is a change in addresses
         if(this.props.addresses !== this.state.addresses){
             this.fetchPlaces(this.state.mapProps, this.state.map);
         }
+        // re-render if selected place on the list changes
         if(this.props.selectedPlace !== this.state.selectedPlace){
             this.setState({
                 selectedPlace: this.props.selectedPlace,
@@ -36,6 +37,10 @@ class MapContainer extends Component {
         window.scrollTo(0, 0);
     }
 
+    /*
+    Fetches real estate agencies near the two input addresses using google places api
+    Distance - 10 miles
+     */
     fetchPlaces(mapProps, map) {
         let {google} = mapProps;
         let service = new google.maps.places.PlacesService(map);
@@ -49,13 +54,16 @@ class MapContainer extends Component {
 
         service.nearbySearch(request, (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // store results from first address and reconstruct query for second address
                 places=results;
                 location = this.props.addresses[1].geometry.location;
                 request['location'] = location;
                 service.nearbySearch(request, (results, status) => {
                     if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        // adding only unique entries from the second query
                         places = MapContainer.addWithoutDuplicates(places, results);
                         this.computeDistances(google, places);
+                        // sorting entries by distance from input addresses
                         places.sort(function(a, b){
                             return a.distance - b.distance
                         });
@@ -72,6 +80,9 @@ class MapContainer extends Component {
         })
     }
 
+    /*
+    Computes the distance of each place from the given two addresses. Returns a sum of distances from the addresses
+     */
     computeDistances(google, places){
         for(let i in places){
             places[i]['distance'] = google.maps.geometry.spherical.computeDistanceBetween(
@@ -84,6 +95,9 @@ class MapContainer extends Component {
         }
     }
 
+    /*
+    adds new items to the current list, if it doesn't already exist in it
+     */
     static addWithoutDuplicates(list, items){
         for(let i in items){
             let duplicate=false;
@@ -99,7 +113,9 @@ class MapContainer extends Component {
         return list;
     }
 
-
+    /*
+    sets state to show infowindow on marker click
+     */
     onMarkerClick(props, marker, e){
         this.setState({
             activePlace: props,
@@ -108,6 +124,9 @@ class MapContainer extends Component {
         });
     }
 
+    /*
+    sets the place with given placeid as active
+     */
     isActive(placeId){
         if(!this.state.selectedPlace)
             return false;
@@ -128,6 +147,7 @@ class MapContainer extends Component {
             <Map
                 google={this.props.google}
                 style={style}
+                // initial center is Austin, TX
                 initialCenter={{
                     lat: 30.267153,
                     lng: -97.7430608
@@ -163,6 +183,11 @@ MapContainer.propTypes = {
     selectedPlace: PropTypes.object,
     onGettingPlaces: PropTypes.func,
     google: PropTypes.object
+};
+
+MapContainer.defaultProps = {
+    addresses: [],
+    google: {}
 };
 
 export default MapContainer;

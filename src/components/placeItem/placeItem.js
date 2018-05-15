@@ -10,6 +10,7 @@ class PlaceItem extends Component{
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
     }
+
     handleSelect(place){
         this.props.handleSelect(place);
     }
@@ -26,9 +27,16 @@ class PlaceItem extends Component{
         return place.rating + '/5';
     }
 
+    /*
+    converts from meters to miles
+     */
+    toMiles(val){
+        return (val/1609.34).toFixed(2)
+    }
+
     render(){
         const place = this.props.place;
-        const distance = (place.distance/1609.34).toFixed(2);
+        const distance = this.toMiles(place.distance);
 
         return(
             <a onClick={() => this.handleSelect(place)} className="list-group-item list-group-item-action flex-column align-items-start mb-1 pointer">
@@ -47,6 +55,10 @@ class PlaceItem extends Component{
 PlaceItem.propTypes={
     place: PropTypes.object,
     handleSelect: PropTypes.func
+};
+
+PlaceItem.defaultProps = {
+    place: {}
 };
 
 export default PlaceItem;

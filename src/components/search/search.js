@@ -19,6 +19,9 @@ class Search extends Component {
         this.handleChangeAddress2 = this.handleChangeAddress2.bind(this);
     }
 
+    /*
+        constructs google map address objects for the 2 input addresses and call the parent handler
+     */
     handleSubmit(event){
         event.preventDefault();
         if(!this.state.address1 || !this.state.address2){
@@ -50,6 +53,7 @@ class Search extends Component {
     };
 
     render() {
+        // autocomplete input field and dropdown container
         const renderFunction = ({ getInputProps, getSuggestionItemProps, suggestions }) => (
             <div className="form-group">
                 <input className="form-control" {...getInputProps()} />
@@ -63,6 +67,9 @@ class Search extends Component {
             </div>
         );
 
+        /*
+         Setting bounds to Austin, TX area for autocomplete. This won't restrict other suggestions but will bias towards Austin
+         */
         let google=window.google;
         let bounds = new google.maps.LatLngBounds(
             new google.maps.LatLng({lat: 30.098659, lng: -97.938383}),
