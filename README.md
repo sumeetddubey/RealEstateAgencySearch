@@ -2,6 +2,8 @@ React based app for finding real estate agencies nearby 2 addresses
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
+Hosted on heroku [here](https://tranquil-eyrie-91425.herokuapp.com) 
+
 Installation:
 1. Clone the repo
 2. npm install
