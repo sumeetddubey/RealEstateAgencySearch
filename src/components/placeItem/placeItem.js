@@ -46,7 +46,7 @@ class PlaceItem extends Component{
                 </div>
                 <p>{place.vicinity}</p>
                 <span className={this.isOpen(place) ? 'badge badge-primary' : 'badge badge-light'}>{this.isOpen(place) ? 'Open Now' : 'Closed'}</span>
-                <span className="ml-4">{this.getRating(place)}</span>
+                <span className="ml-4">Rating: {this.getRating(place)}</span>
             </a>
         )
     }

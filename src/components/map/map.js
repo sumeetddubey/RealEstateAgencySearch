@@ -164,6 +164,7 @@ class MapContainer extends Component {
                         position={place.geometry.location}
                         onClick={this.onMarkerClick}
                         icon={this.isActive(place.id) ? activeIcon : undefined}
+                        zIndex={this.isActive(place.id) ? 2:1}
                     />
                 )}
                 <InfoWindow

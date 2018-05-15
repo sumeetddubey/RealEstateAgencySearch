@@ -37,9 +37,9 @@ class Search extends Component {
                         addresses.push(results[0]);
                         this.props.onSearch(addresses);
                     })
-                    .catch(error => console.error('Error', error));
+                    .catch(error => alert('Address not found'));
             })
-            .catch(error => console.error('Error', error));
+            .catch(error => alert('Address not found'));
 
 
     }
