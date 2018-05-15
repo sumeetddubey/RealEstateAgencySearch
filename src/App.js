@@ -45,9 +45,9 @@ class App extends Component {
             <div className="map-container my-4">
                 <MapContainer
                     addresses={this.state.addresses}
-                    onGettingPlaces={this.onGettingPlaces}
                     google={window.google}
                     selectedPlace={this.state.selectedPlace}
+                    onGettingPlaces={this.onGettingPlaces}
                 />
             </div>
             <PlacesList

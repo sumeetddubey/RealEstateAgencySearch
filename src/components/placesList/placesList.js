@@ -2,6 +2,7 @@
  * Created by sumeetdubey on 5/14/18.
  */
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import './placesList.css';
 import PlaceItem from '../placeItem/placeItem.js';
 
@@ -29,5 +30,10 @@ class PlacesList extends Component{
         )
     };
 }
+
+PlacesList.propTypes={
+    places: PropTypes.array,
+    selectedPlace: PropTypes.object
+};
 
 export default PlacesList;

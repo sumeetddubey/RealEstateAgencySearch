@@ -2,6 +2,7 @@
  * Created by sumeetdubey on 5/14/18.
  */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import './search.css';
 
@@ -102,5 +103,9 @@ class Search extends Component {
         );
     }
 }
+
+Search.propTypes={
+    onSearch: PropTypes.func
+};
 
 export default Search;

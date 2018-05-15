@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker} from 'google-maps-react';
+import PropTypes from 'prop-types';
 import './map.css';
 
 class MapContainer extends Component {
@@ -36,10 +37,8 @@ class MapContainer extends Component {
     }
 
     fetchPlaces(mapProps, map) {
-        console.log('fetching places...');
-        const {google} = mapProps;
-        const service = new google.maps.places.PlacesService(map);
-
+        let {google} = mapProps;
+        let service = new google.maps.places.PlacesService(map);
         let location = this.props.addresses[0].geometry.location;
         let request = {
             location: location,
@@ -47,6 +46,7 @@ class MapContainer extends Component {
             type: ['real_estate_agency']
         };
         let places=[];
+
         service.nearbySearch(request, (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 places=results;
@@ -73,7 +73,7 @@ class MapContainer extends Component {
     }
 
     computeDistances(google, places){
-        for(var i in places){
+        for(let i in places){
             places[i]['distance'] = google.maps.geometry.spherical.computeDistanceBetween(
                     places[i].geometry.location, this.props.addresses[0].geometry.location
                 )
@@ -157,5 +157,12 @@ class MapContainer extends Component {
         );
     }
 }
+
+MapContainer.propTypes = {
+    addresses: PropTypes.array,
+    selectedPlace: PropTypes.object,
+    onGettingPlaces: PropTypes.func,
+    google: PropTypes.object
+};
 
 export default MapContainer;
