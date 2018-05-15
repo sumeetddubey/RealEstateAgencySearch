@@ -65,7 +65,6 @@ class MapContainer extends Component {
                             places: places,
                             addresses: this.props.addresses
                         });
-                        console.log(places);
                         this.props.onGettingPlaces(places);
                     }
                 })
