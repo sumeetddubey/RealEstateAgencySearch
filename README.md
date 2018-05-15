@@ -10,6 +10,7 @@ Installation:
 3. npm start
 
 Structure and Design Choices:
+
 The application uses google places api to autocomplete results entered in the search bar and the maps api to display the results on a map. 
 The parent component of the app lies in app.js. There is a MapContainer component to display the map and a PlacesList component to display
 results as a list. As both these components essentailly use the same results data, they are direct children of the app component. 

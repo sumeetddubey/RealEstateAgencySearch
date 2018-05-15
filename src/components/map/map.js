@@ -16,7 +16,8 @@ class MapContainer extends Component {
             activePlace: {},
             mapProps: null,
             map: null,
-            mapCenter:{}
+            mapCenter:{},
+            mapZoom: 11
         };
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
@@ -31,15 +32,16 @@ class MapContainer extends Component {
         if(this.props.selectedPlace !== this.state.selectedPlace){
             this.setState({
                 selectedPlace: this.props.selectedPlace,
-                mapCenter: this.props.selectedPlace.geometry.location
+                mapCenter: this.props.selectedPlace.geometry.location,
+                mapZoom: 16
             });
+            window.scrollTo(0, 0);
         }
-        window.scrollTo(0, 0);
     }
 
     /*
-    Fetches real estate agencies near the two input addresses using google places api
-    Distance - 10 miles
+     Fetches real estate agencies near the two input addresses using google places api
+     Distance - 10 miles
      */
     fetchPlaces(mapProps, map) {
         let {google} = mapProps;
@@ -70,6 +72,8 @@ class MapContainer extends Component {
                         this.setState({
                             map: map,
                             mapProps: mapProps,
+                            mapCenter: this.props.addresses[0].geometry.location,
+                            mapZoom: 11,
                             places: places,
                             addresses: this.props.addresses
                         });
@@ -81,22 +85,22 @@ class MapContainer extends Component {
     }
 
     /*
-    Computes the distance of each place from the given two addresses. Returns a sum of distances from the addresses
+     Computes the distance of each place from the given two addresses. Returns a sum of distances from the addresses
      */
     computeDistances(google, places){
         for(let i in places){
             places[i]['distance'] = google.maps.geometry.spherical.computeDistanceBetween(
                     places[i].geometry.location, this.props.addresses[0].geometry.location
                 )
-            +
+                +
                 google.maps.geometry.spherical.computeDistanceBetween(
-                    places[i].geometry.location, this.props.addresses[0].geometry.location
+                    places[i].geometry.location, this.props.addresses[1].geometry.location
                 )
         }
     }
 
     /*
-    adds new items to the current list, if it doesn't already exist in it
+     adds new items to the current list, if it doesn't already exist in it
      */
     static addWithoutDuplicates(list, items){
         for(let i in items){
@@ -114,18 +118,18 @@ class MapContainer extends Component {
     }
 
     /*
-    sets state to show infowindow on marker click
+     sets state to show infowindow on marker click
      */
     onMarkerClick(props, marker, e){
         this.setState({
-            activePlace: props,
+            activePlace: props.currentPlace,
             activeMarker: marker,
             showingInfoWindow: true
         });
     }
 
     /*
-    sets the place with given placeid as active
+     sets the place with given placeid as active
      */
     isActive(placeId){
         if(!this.state.selectedPlace)
@@ -147,21 +151,21 @@ class MapContainer extends Component {
             <Map
                 google={this.props.google}
                 style={style}
-                // initial center is Austin, TX
+                // initial center is Austin
                 initialCenter={{
                     lat: 30.267153,
                     lng: -97.7430608
                 }}
                 center={this.state.mapCenter}
-                zoom={12}
+                zoom={this.state.mapZoom}
                 onReady={this.fetchPlaces}
             >
 
                 {this.state.places && this.state.places.map((place, i) =>
                     <Marker
                         key={i}
-                        name={place.name}
                         position={place.geometry.location}
+                        currentPlace={place}
                         onClick={this.onMarkerClick}
                         icon={this.isActive(place.id) ? activeIcon : undefined}
                         zIndex={this.isActive(place.id) ? 2:1}
@@ -171,7 +175,9 @@ class MapContainer extends Component {
                     marker={this.state.activeMarker}
                     visible={this.state.showingInfoWindow}>
                     <div>
-                        <p className="lead">{this.state.activePlace.name}</p>
+                        <img height="20px" width="20px" src={this.state.activePlace.icon} alt="" />
+                        <span className="bold ml-2">{this.state.activePlace.name}</span>
+                        <p className="ml-4">{this.state.activePlace.vicinity}</p>
                     </div>
                 </InfoWindow>
             </Map>
